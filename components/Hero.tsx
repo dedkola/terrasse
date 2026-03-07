@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 
 const Hero = () => {
     return (
@@ -13,11 +14,13 @@ const Hero = () => {
                 transition={{ duration: 1.5 }}
                 className="absolute inset-0"
             >
-                <img
+                <Image
                     src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=2000"
                     alt="Hero"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     referrerPolicy="no-referrer"
+                    priority
                 />
                 <div className="absolute inset-0 bg-black/10" />
             </motion.div>

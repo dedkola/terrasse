@@ -3,16 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShoppingBag, Search, Menu, X } from 'lucide-react';
+import Link from 'next/link';
 import { useStateContext } from './StateProvider';
 
 const Navbar = () => {
-    const { cartCount, setSelectedProduct } = useStateContext();
+    const { cartCount } = useStateContext();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-    const onLogoClick = () => {
-        setSelectedProduct(null);
-    };
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -30,12 +27,12 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex-1 flex justify-center md:justify-center">
-                    <button
-                        onClick={onLogoClick}
+                    <Link
+                        href="/"
                         className="logo-text text-2xl md:text-3xl font-bold tracking-[0.2em] outline-none"
                     >
                         TERRASSE
-                    </button>
+                    </Link>
                 </div>
 
                 <div className="flex items-center space-x-6">

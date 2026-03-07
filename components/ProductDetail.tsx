@@ -3,9 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Minus, Plus, Heart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useStateContext } from './StateProvider';
 import { Product } from '@/types';
 
-const ProductDetail = ({ product, onBack, onAddToCart }: { product: Product; onBack: () => void; onAddToCart: () => void; key?: React.Key }) => {
+const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
+    const router = useRouter();
+    const { addToCart } = useStateContext();
     const [selectedSize, setSelectedSize] = useState('M');
     const [quantity, setQuantity] = useState(1);
     const sizes = ['XS', 'S', 'M', 'L', 'XL'];
@@ -21,7 +26,7 @@ const ProductDetail = ({ product, onBack, onAddToCart }: { product: Product; onB
             className="pt-32 pb-24 px-6 max-w-7xl mx-auto"
         >
             <button
-                onClick={onBack}
+                onClick={() => router.back()}
                 className="flex items-center space-x-2 text-sm text-brand-muted hover:text-black transition-colors mb-12 group"
             >
                 <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -36,19 +41,24 @@ const ProductDetail = ({ product, onBack, onAddToCart }: { product: Product; onB
                         animate={{ y: 0, opacity: 1 }}
                         className="aspect-[3/4] bg-stone-100 rounded-2xl overflow-hidden"
                     >
-                        <img
+                        <Image
                             src={product.image}
                             alt={product.name}
+                            width={800}
+                            height={1200}
                             className="w-full h-full object-cover"
                             referrerPolicy="no-referrer"
+                            priority
                         />
                     </motion.div>
                     <div className="grid grid-cols-3 gap-4">
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="aspect-square bg-stone-100 rounded-xl overflow-hidden cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                                <img
+                                <Image
                                     src={product.image}
                                     alt={`${product.name} view ${i}`}
+                                    width={400}
+                                    height={400}
                                     className="w-full h-full object-cover"
                                     referrerPolicy="no-referrer"
                                 />
@@ -113,7 +123,7 @@ const ProductDetail = ({ product, onBack, onAddToCart }: { product: Product; onB
 
                     <div className="flex space-x-4">
                         <button
-                            onClick={onAddToCart}
+                            onClick={addToCart}
                             className="flex-1 bg-black text-white py-5 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-stone-800 transition-all active:scale-[0.98]"
                         >
                             В корзину
