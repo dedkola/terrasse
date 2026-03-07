@@ -1,9 +1,21 @@
 import React from 'react';
-import { PRODUCTS } from '@/types';
+import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
 
-export default function JeansCategoryPage() {
-    const jeansProducts = PRODUCTS.filter(p => p.category === 'Деним' || p.category.includes('Jeans'));
+async function getJeansProducts(): Promise<Product[]> {
+    try {
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+        const res = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
+        if (!res.ok) return [];
+        const all: Product[] = await res.json();
+        return all.filter((p) => p.category === 'Деним' || p.category.includes('Jeans'));
+    } catch {
+        return [];
+    }
+}
+
+export default async function JeansCategoryPage() {
+    const jeansProducts = await getJeansProducts();
 
     return (
         <main className="pt-32 pb-24 px-6 max-w-7xl mx-auto min-h-screen">

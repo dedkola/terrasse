@@ -1,8 +1,8 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { PRODUCTS } from '@/types';
+import { Product } from '@/types';
 import { useStateContext } from '@/components/StateProvider';
 import Hero from '@/components/Hero';
 import CategorySection from '@/components/CategorySection';
@@ -10,6 +10,14 @@ import ProductCard from '@/components/ProductCard';
 import ProductDetail from '@/components/ProductDetail';
 
 export default function Home() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch('/api/products')
+            .then((r) => r.json())
+            .then((data) => Array.isArray(data) ? setProducts(data) : null)
+            .catch(() => { });
+    }, []);
 
     return (
         <AnimatePresence mode="wait">
@@ -35,7 +43,7 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
-                        {PRODUCTS.map((product) => (
+                        {products.map((product) => (
                             <ProductCard
                                 key={product.id}
                                 product={product}
