@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 const R2_PUBLIC_DOMAIN = process.env.R2_PUBLIC_DOMAIN!;
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME!;
@@ -29,4 +29,14 @@ export async function uploadToR2(
     );
 
     return `${R2_PUBLIC_DOMAIN}/${key}`;
+}
+
+export async function deleteFromR2(imageUrl: string): Promise<void> {
+    const key = imageUrl.replace(`${R2_PUBLIC_DOMAIN}/`, '');
+    await s3.send(
+        new DeleteObjectCommand({
+            Bucket: R2_BUCKET_NAME,
+            Key: key,
+        })
+    );
 }
