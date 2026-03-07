@@ -24,9 +24,9 @@ const Navbar = () => {
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'}`}>
             <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
                 <div className="hidden md:flex items-center space-x-8">
-                    <a href="#" className="nav-link">Shop</a>
-                    <a href="#" className="nav-link">Collections</a>
-                    <a href="#" className="nav-link">About</a>
+                    <a href="#" className="nav-link">Магазин</a>
+                    <a href="#" className="nav-link">Коллекции</a>
+                    <a href="#" className="nav-link">О нас</a>
                 </div>
 
                 <div className="flex-1 flex justify-center md:justify-center">
@@ -75,10 +75,10 @@ const Navbar = () => {
                             </button>
                         </div>
                         <div className="mt-12 space-y-8 text-center">
-                            <a href="#" className="block text-3xl font-serif italic">New Arrivals</a>
-                            <a href="#" className="block text-3xl font-serif italic">Shop All</a>
-                            <a href="#" className="block text-3xl font-serif italic">Collections</a>
-                            <a href="#" className="block text-3xl font-serif italic">Journal</a>
+                            <a href="#" className="block text-3xl font-serif italic">Новинки</a>
+                            <a href="#" className="block text-3xl font-serif italic">Все товары</a>
+                            <a href="#" className="block text-3xl font-serif italic">Коллекции</a>
+                            <a href="#" className="block text-3xl font-serif italic">Журнал</a>
                         </div>
                     </motion.div>
                 )}

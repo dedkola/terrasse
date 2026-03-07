@@ -11,51 +11,51 @@ export interface Product {
 export const PRODUCTS: Product[] = [
   {
     id: '1',
-    name: 'Classic Black Longsleeve',
+    name: 'Классический черный лонгслив',
     price: 89,
-    category: 'Tops',
-    image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=800',
+    category: 'Топы',
+    image: '/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.20.36.jpeg',
     isNew: true,
-    description: 'A versatile black longsleeve crafted from premium organic cotton. Features a tailored fit and reinforced seams for lasting durability.'
+    description: 'Универсальный черный лонгслив, изготовленный из премиального органического хлопка. Отличается приталенным кроем и усиленными швами для долговечности.'
   },
   {
     id: '2',
-    name: 'Wide Leg Denim',
+    name: 'Широкие джинсы',
     price: 145,
-    category: 'Bottoms',
-    image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&q=80&w=800',
-    description: 'Relaxed wide-leg jeans in a vintage wash. Made from 100% recycled denim with a high-waisted silhouette.'
+    category: 'Деним',
+    image: '/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.21.06.jpeg',
+    description: 'Свободные широкие джинсы в винтажной стирке. Изготовлены из 100% переработанного денима с высокой талией.'
   },
   {
     id: '3',
-    name: 'Embroidered Graphic Tee',
+    name: 'Футболка с графичной вышивкой',
     price: 65,
-    category: 'Tops',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800',
-    description: 'Soft cotton tee featuring a hand-embroidered graphic. A perfect statement piece for casual everyday wear.'
+    category: 'Топы',
+    image: '/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.31.21.jpeg',
+    description: 'Мягкая хлопковая футболка с ручной графичной вышивкой. Идеальная акцентная вещь для повседневной носки.'
   },
   {
     id: '4',
-    name: 'Grey Melange Knit',
+    name: 'Серый меланжевый свитер',
     price: 120,
-    category: 'Knitwear',
-    image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&q=80&w=800',
-    description: 'Lightweight melange knit sweater. Breathable yet warm, ideal for layering during transitional seasons.'
+    category: 'Трикотаж',
+    image: '/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.57.26.jpeg',
+    description: 'Легкий меланжевый вязаный свитер. Дышащий, но теплый, идеально подходит для многослойных образов в межсезонье.'
   },
   {
     id: '5',
-    name: 'Quilted Winter Parka',
+    name: 'Стеганая зимняя парка',
     price: 295,
-    category: 'Outerwear',
-    image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&q=80&w=800',
-    description: 'Water-resistant quilted parka with recycled down insulation. Designed to withstand the harshest winter conditions.'
+    category: 'Верхняя одежда',
+    image: '/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.57.40.jpeg',
+    description: 'Водоотталкивающая стеганая парка с утеплителем из переработанного пуха. Создана, чтобы выдерживать самые суровые зимние условия.'
   },
   {
     id: '6',
-    name: 'Structured Blazer',
+    name: 'Структурированный блейзер',
     price: 210,
-    category: 'Outerwear',
-    image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=800',
-    description: 'Modern structured blazer with a sharp silhouette. Features internal pockets and a smooth silk lining.'
+    category: 'Верхняя одежда',
+    image: '/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.58.05%20(1).jpeg',
+    description: 'Современный структурированный блейзер с четким силуэтом. Имеет внутренние карманы и гладкую шелковую подкладку.'
   }
 ];

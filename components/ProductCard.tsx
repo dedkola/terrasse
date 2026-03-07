@@ -22,7 +22,7 @@ const ProductCard = ({ product, onAddToCart, onClick }: { product: Product; onAd
                     referrerPolicy="no-referrer"
                 />
                 {product.isNew && (
-                    <span className="absolute top-4 left-4 bg-white px-3 py-1 text-[10px] uppercase tracking-widest font-bold">New</span>
+                    <span className="absolute top-4 left-4 bg-white px-3 py-1 text-[10px] uppercase tracking-widest font-bold">Новинка</span>
                 )}
                 <button className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                     <Heart size={16} />
@@ -35,7 +35,7 @@ const ProductCard = ({ product, onAddToCart, onClick }: { product: Product; onAd
                         }}
                         className="w-full bg-black text-white py-3 text-xs uppercase tracking-widest font-bold hover:bg-stone-800 transition-colors"
                     >
-                        Quick Add
+                        Быстрое добавление
                     </button>
                 </div>
             </div>

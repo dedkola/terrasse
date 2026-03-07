@@ -28,11 +28,11 @@ export default function Home() {
                     <section className="py-24 px-6 max-w-7xl mx-auto">
                         <div className="flex justify-between items-end mb-12">
                             <div>
-                                <span className="text-xs uppercase tracking-[0.3em] text-brand-muted mb-2 block">Curated Selection</span>
-                                <h2 className="text-4xl font-serif">Featured Arrivals</h2>
+                                <span className="text-xs uppercase tracking-[0.3em] text-brand-muted mb-2 block">Специальная подборка</span>
+                                <h2 className="text-4xl font-serif">Избранные новинки</h2>
                             </div>
                             <a href="#" className="text-sm font-medium border-b border-black pb-1 hover:opacity-60 transition-opacity">
-                                View All
+                                Смотреть все
                             </a>
                         </div>
 
@@ -56,14 +56,14 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 <h2 className="text-5xl md:text-7xl font-serif leading-tight mb-8">
-                                    Designed for <br />
-                                    <span className="italic">Everyday</span> Elegance
+                                    Создано для <br />
+                                    <span className="italic">Повседневной</span> Элегантности
                                 </h2>
                                 <p className="text-stone-400 max-w-md mb-12 leading-relaxed">
-                                    Our philosophy is simple: create pieces that last. We focus on premium materials and timeless silhouettes that transition seamlessly from day to night.
+                                    Наша философия проста: создавать долговечные вещи. Мы уделяем внимание премиальным материалам и вневременным силуэтам, которые идеально подходят как для дня, так и для вечера.
                                 </p>
                                 <button className="px-10 py-4 border border-white rounded-full text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                                    Our Story
+                                    Наша история
                                 </button>
                             </motion.div>
                             <motion.div

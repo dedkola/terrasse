@@ -6,9 +6,9 @@ import { ChevronRight } from 'lucide-react';
 
 const CategorySection = () => {
     const categories = [
-        { name: 'Outerwear', image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Denim', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Knitwear', image: 'https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?auto=format&fit=crop&q=80&w=800' }
+        { name: 'Верхняя одежда', image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Деним', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Трикотаж', image: 'https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?auto=format&fit=crop&q=80&w=800' }
     ];
 
     return (
@@ -33,7 +33,7 @@ const CategorySection = () => {
                         <div className="absolute inset-0 flex flex-col justify-end p-8">
                             <h3 className="text-3xl font-serif text-white mb-2">{cat.name}</h3>
                             <div className="flex items-center text-white/80 text-sm font-medium group-hover:text-white transition-colors">
-                                <span>Shop Now</span>
+                                <span>В магазин</span>
                                 <ChevronRight size={16} className="ml-1" />
                             </div>
                         </div>

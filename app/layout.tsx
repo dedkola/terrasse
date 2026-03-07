@@ -5,8 +5,8 @@ import Footer from '@/components/Footer';
 import { StateProvider } from '@/components/StateProvider';
 
 export const metadata: Metadata = {
-    title: 'Terrasse - The Art of Simplicity',
-    description: 'Crafting timeless essentials for the modern wardrobe. Quality, sustainability, and effortless style.',
+    title: 'Terrasse - Искусство Простоты',
+    description: 'Создаем вневременные базовые вещи для современного гардероба. Качество, экологичность и непринужденный стиль.',
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="ru">
             <body>
                 <StateProvider>
                     <div className="flex flex-col min-h-screen">

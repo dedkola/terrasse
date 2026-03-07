@@ -29,13 +29,13 @@ const Hero = () => {
                     transition={{ delay: 0.5, duration: 0.8 }}
                     className="max-w-xl"
                 >
-                    <span className="text-xs uppercase tracking-[0.3em] text-white/80 mb-4 block">New Season 2026</span>
+                    <span className="text-xs uppercase tracking-[0.3em] text-white/80 mb-4 block">Новый сезон 2026</span>
                     <h1 className="text-6xl md:text-8xl font-serif text-white leading-tight mb-8">
-                        The Art of <br />
-                        <span className="italic">Simplicity</span>
+                        Искусство <br />
+                        <span className="italic">Простоты</span>
                     </h1>
                     <button className="group flex items-center space-x-4 bg-white text-black px-8 py-4 rounded-full font-medium transition-all hover:bg-black hover:text-white">
-                        <span>Explore Collection</span>
+                        <span>Смотреть коллекцию</span>
                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                     </button>
                 </motion.div>
