@@ -57,5 +57,29 @@ export const PRODUCTS: Product[] = [
     category: 'Верхняя одежда',
     image: 'https://dev.img.terrasse.tkweb.site/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.58.05%20(1).jpeg',
     description: 'Современный структурированный блейзер с четким силуэтом. Имеет внутренние карманы и гладкую шелковую подкладку.'
+  },
+  {
+    id: '7',
+    name: 'Классические прямые джинсы',
+    price: 130,
+    category: 'Деним',
+    image: 'https://dev.img.terrasse.tkweb.site/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.21.06.jpeg',
+    description: 'Базовые прямые джинсы из плотного денима. Идеальная посадка и классический синий цвет.'
+  },
+  {
+    id: '8',
+    name: 'Светлые джинсы mom-fit',
+    price: 125,
+    category: 'Деним',
+    image: 'https://dev.img.terrasse.tkweb.site/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.21.06.jpeg',
+    description: 'Комфортные джинсы силуэта mom в светлом оттенке с легкими потертостями.'
+  },
+  {
+    id: '9',
+    name: 'Черные зауженные джинсы',
+    price: 110,
+    category: 'Деним',
+    image: 'https://dev.img.terrasse.tkweb.site/photos/photo/WhatsApp%20Image%202026-03-06%20at%2019.21.06.jpeg',
+    description: 'Эластичные зауженные джинсы черного цвета. Универсальная модель на каждый день.'
   }
 ];
