@@ -17,7 +17,7 @@ const ProductCard = ({ product }: { product: Product; key?: React.Key }) => {
             viewport={{ once: true }}
             className="group"
         >
-            <Link href={`/jeans/${product.id}`} className="block">
+            <Link href={`/jeans/${product.slug}`} className="block">
                 <div className="relative overflow-hidden bg-stone-100 rounded-lg">
                     <Image
                         src={product.image}

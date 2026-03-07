@@ -1,26 +1,66 @@
 import React from 'react';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Product } from '@/types';
+import { d1Query } from '@/lib/d1';
 import ProductDetail from '@/components/ProductDetail';
 
-async function getProducts(): Promise<Product[]> {
-    try {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
-        if (!res.ok) return [];
-        return res.json();
-    } catch {
-        return [];
-    }
+type ProductRow = {
+    id: string;
+    slug: string;
+    name: string;
+    price: number;
+    category: string;
+    description: string;
+    image: string;
+    is_new: number;
+};
+
+async function getProductBySlug(slug: string): Promise<Product | null> {
+    const result = await d1Query<ProductRow>(
+        'SELECT * FROM products WHERE slug = ? OR id = ? LIMIT 1',
+        [slug, slug]
+    );
+    if (!result.results.length) return null;
+    const p = result.results[0];
+    return {
+        id: p.id,
+        slug: p.slug || p.id,
+        name: p.name,
+        price: p.price,
+        category: p.category,
+        description: p.description,
+        image: p.image,
+        isNew: Boolean(p.is_new),
+    };
 }
 
-// Don't pre-generate static params since products are dynamic
 export const dynamic = 'force-dynamic';
 
+export async function generateMetadata(
+    { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
+
+    if (!product) return {};
+
+    return {
+        title: `${product.name} — Terrasse`,
+        description: product.description
+            ? product.description.slice(0, 160)
+            : `${product.name} из коллекции Terrasse. Цена: ${product.price} ₽.`,
+        openGraph: {
+            title: product.name,
+            description: product.description?.slice(0, 160),
+            images: product.image ? [{ url: product.image }] : [],
+        },
+    };
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-    const resolvedParams = await params;
-    const products = await getProducts();
-    const product = products.find((p) => p.id === resolvedParams.slug);
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
 
     if (!product) {
         notFound();
@@ -28,10 +68,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     return (
         <main className="min-h-screen">
-            {/* Product detail component handles cart and navigation internally */}
-            <ProductDetail
-                product={product}
-            />
+            <ProductDetail product={product} />
         </main>
     );
 }
+

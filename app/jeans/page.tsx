@@ -1,6 +1,12 @@
 import React from 'react';
+import { Metadata } from 'next';
 import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
+
+export const metadata: Metadata = {
+    title: 'Джинсы и Деним — Terrasse',
+    description: 'Коллекция джинсов и денимовых вещей Terrasse. Вневременные силуэты, качественные материалы.',
+};
 
 async function getJeansProducts(): Promise<Product[]> {
     try {
