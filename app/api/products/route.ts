@@ -26,29 +26,47 @@ export async function POST(request: NextRequest) {
         const category = formData.get('category') as string;
         const description = formData.get('description') as string;
         const isNew = formData.get('isNew') === 'true' ? 1 : 0;
-        const imageFile = formData.get('image') as File;
+        const youtubeUrl = (formData.get('youtube_url') as string) || null;
 
-        if (!name || !price || !category || !imageFile) {
+        if (!name || !price || !category) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        // Upload image to R2
-        const bytes = await imageFile.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-        const ext = imageFile.name.split('.').pop() || 'jpg';
-        const filename = `${randomUUID()}.${ext}`;
-        const imageUrl = await uploadToR2(buffer, filename, imageFile.type);
+        // Upload all image files (image_0 … image_5)
+        const imageUrls: string[] = [];
+        for (let i = 0; i < 6; i++) {
+            const file = formData.get(`image_${i}`) as File | null;
+            if (!file || file.size === 0) continue;
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const ext = file.name.split('.').pop() || 'jpg';
+            const filename = `${randomUUID()}.${ext}`;
+            const url = await uploadToR2(buffer, filename, file.type);
+            imageUrls.push(url);
+        }
 
-        // Insert into D1
+        if (imageUrls.length === 0) {
+            return NextResponse.json({ error: 'At least one image is required' }, { status: 400 });
+        }
+
         const id = randomUUID();
         const slug = await generateUniqueSlug(name);
+        const primaryImage = imageUrls[0];
+
         await d1Query(
-            `INSERT INTO products (id, slug, name, price, category, description, image, is_new)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, slug, name, parseFloat(price), category, description || '', imageUrl, isNew]
+            `INSERT INTO products (id, slug, name, price, category, description, image, is_new, youtube_url)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [id, slug, name, parseFloat(price), category, description || '', primaryImage, isNew, youtubeUrl]
         );
 
-        return NextResponse.json({ success: true, id, slug, imageUrl });
+        for (let i = 0; i < imageUrls.length; i++) {
+            await d1Query(
+                'INSERT INTO product_images (id, product_id, url, position) VALUES (?, ?, ?, ?)',
+                [randomUUID(), id, imageUrls[i], i]
+            );
+        }
+
+        return NextResponse.json({ success: true, id, slug, imageUrl: primaryImage });
     } catch (err) {
         console.error('Upload error:', err);
         return NextResponse.json({ error: String(err) }, { status: 500 });
