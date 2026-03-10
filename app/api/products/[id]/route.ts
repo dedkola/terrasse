@@ -92,17 +92,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         );
         const currentImageUrls = currentImagesResult.results.map((r) => r.url);
 
-        // Delete removed images from R2 and DB
+        // Delete removed images from R2
         const removedUrls = currentImageUrls.filter((url) => !keptUrls.includes(url));
         for (const url of removedUrls) {
             await deleteFromR2(url);
         }
-        if (removedUrls.length > 0) {
-            await d1Query(
-                'DELETE FROM product_images WHERE product_id = ?',
-                [id]
-            );
-        }
+        // Always clear all product_images rows before re-inserting with correct positions
+        await d1Query('DELETE FROM product_images WHERE product_id = ?', [id]);
 
         // Upload new image files
         const newImageUrls: string[] = [];
