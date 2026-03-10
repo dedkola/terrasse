@@ -42,7 +42,7 @@ export default function AddProductPage() {
     const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
     const onDragLeave = () => setDragging(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (images.length === 0) { setErrorMsg('Добавьте хотя бы одно изображение'); return; }
 
