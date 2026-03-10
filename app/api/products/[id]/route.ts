@@ -13,6 +13,7 @@ type ProductRow = {
     description: string;
     image: string;
     is_new: number;
+    youtube_url: string | null;
 };
 
 async function generateUniqueSlug(name: string, excludeId: string): Promise<string> {
@@ -38,6 +39,13 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
         }
 
         const p = result.results[0];
+
+        const imagesResult = await d1Query<{ url: string }>(
+            'SELECT url FROM product_images WHERE product_id = ? ORDER BY position ASC',
+            [id]
+        );
+        const images = imagesResult.results.map((r) => r.url);
+
         return NextResponse.json({
             id: p.id,
             slug: p.slug || p.id,
@@ -46,6 +54,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
             category: p.category,
             description: p.description,
             image: p.image,
+            images,
+            youtube_url: p.youtube_url ?? undefined,
             isNew: Boolean(p.is_new),
         });
     } catch (err) {
