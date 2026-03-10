@@ -89,7 +89,7 @@ export default function EditProductPage() {
     const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
     const onDragLeave = () => setDragging(false);
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSave = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSaveStatus('loading');
         setSaveError('');
