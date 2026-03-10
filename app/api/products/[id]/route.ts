@@ -67,7 +67,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     try {
         const { id } = await params;
 
-        // Fetch current product to get existing image URL and name
         const existing = await d1Query<ProductRow>('SELECT * FROM products WHERE id = ?', [id]);
         if (!existing.results.length) {
             return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -80,32 +79,69 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         const category = formData.get('category') as string;
         const description = formData.get('description') as string;
         const isNew = formData.get('isNew') === 'true' ? 1 : 0;
-        const imageFile = formData.get('image') as File | null;
+        const youtubeUrl = (formData.get('youtube_url') as string) || null;
+
+        // Images to keep (existing URLs the admin chose to keep)
+        const existingImagesJson = formData.get('existing_images') as string | null;
+        const keptUrls: string[] = existingImagesJson ? JSON.parse(existingImagesJson) : [];
+
+        // Fetch current images from product_images table
+        const currentImagesResult = await d1Query<{ url: string }>(
+            'SELECT url FROM product_images WHERE product_id = ?',
+            [id]
+        );
+        const currentImageUrls = currentImagesResult.results.map((r) => r.url);
+
+        // Delete removed images from R2 and DB
+        const removedUrls = currentImageUrls.filter((url) => !keptUrls.includes(url));
+        for (const url of removedUrls) {
+            await deleteFromR2(url);
+        }
+        if (removedUrls.length > 0) {
+            await d1Query(
+                'DELETE FROM product_images WHERE product_id = ?',
+                [id]
+            );
+        }
+
+        // Upload new image files
+        const newImageUrls: string[] = [];
+        for (let i = 0; i < 6; i++) {
+            const file = formData.get(`image_${i}`) as File | null;
+            if (!file || file.size === 0) continue;
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            const ext = file.name.split('.').pop() || 'jpg';
+            const filename = `${randomUUID()}.${ext}`;
+            const url = await uploadToR2(buffer, filename, file.type);
+            newImageUrls.push(url);
+        }
+
+        // Final ordered image list: kept first, then new ones
+        const allImages = [...keptUrls, ...newImageUrls];
+
+        // Re-insert all images with correct positions
+        for (let i = 0; i < allImages.length; i++) {
+            await d1Query(
+                'INSERT INTO product_images (id, product_id, url, position) VALUES (?, ?, ?, ?)',
+                [randomUUID(), id, allImages[i], i]
+            );
+        }
+
+        // Primary image for card thumbnail = first image, or keep current if no images
+        const primaryImage = allImages.length > 0 ? allImages[0] : current.image;
 
         if (!name || !price || !category) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        let imageUrl = current.image;
-
-        if (imageFile && imageFile.size > 0) {
-            const bytes = await imageFile.arrayBuffer();
-            const buffer = Buffer.from(bytes);
-            const ext = imageFile.name.split('.').pop() || 'jpg';
-            const filename = `${randomUUID()}.${ext}`;
-            imageUrl = await uploadToR2(buffer, filename, imageFile.type);
-            // Delete old image from R2
-            await deleteFromR2(current.image);
-        }
-
-        // Regenerate slug only if the name changed
         const slug = name !== current.name
             ? await generateUniqueSlug(name, id)
             : (current.slug || slugify(name));
 
         await d1Query(
-            `UPDATE products SET name=?, slug=?, price=?, category=?, description=?, is_new=?, image=? WHERE id=?`,
-            [name, slug, parseFloat(price), category, description || '', isNew, imageUrl, id]
+            `UPDATE products SET name=?, slug=?, price=?, category=?, description=?, is_new=?, image=?, youtube_url=? WHERE id=?`,
+            [name, slug, parseFloat(price), category, description || '', isNew, primaryImage, youtubeUrl, id]
         );
 
         return NextResponse.json({ success: true, slug });
