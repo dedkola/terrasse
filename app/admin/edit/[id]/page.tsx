@@ -12,6 +12,8 @@ type Product = {
     category: string;
     description: string;
     image: string;
+    images: string[];
+    youtube_url?: string;
     isNew: boolean;
 };
 
@@ -22,17 +24,16 @@ export default function EditProductPage() {
     const [loading, setLoading] = useState(true);
     const [fetchError, setFetchError] = useState('');
 
-    // Form fields
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('Деним');
     const [description, setDescription] = useState('');
     const [isNew, setIsNew] = useState(false);
+    const [youtubeUrl, setYoutubeUrl] = useState('');
 
-    // Image: current URL from DB + optional new file
-    const [currentImageUrl, setCurrentImageUrl] = useState('');
-    const [newImageFile, setNewImageFile] = useState<File | null>(null);
-    const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
+    const [existingImages, setExistingImages] = useState<string[]>([]);
+    const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
+    const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
     const [dragging, setDragging] = useState(false);
 
     const fileRef = useRef<HTMLInputElement>(null);
@@ -52,7 +53,8 @@ export default function EditProductPage() {
                 setCategory(data.category);
                 setDescription(data.description || '');
                 setIsNew(data.isNew);
-                setCurrentImageUrl(data.image);
+                setExistingImages(data.images ?? []);
+                setYoutubeUrl(data.youtube_url ?? '');
             } catch (err) {
                 setFetchError(String(err));
             } finally {
@@ -62,22 +64,32 @@ export default function EditProductPage() {
         fetchProduct();
     }, [id]);
 
-    const handleFile = (file: File) => {
-        setNewImageFile(file);
-        setNewImagePreview(URL.createObjectURL(file));
+    const handleNewFiles = useCallback((files: FileList | File[]) => {
+        const total = existingImages.length + newImageFiles.length;
+        const arr = Array.from(files).filter((f) => f.type.startsWith('image/')).slice(0, 6 - total);
+        setNewImageFiles((prev) => [...prev, ...arr]);
+        setNewImagePreviews((prev) => [...prev, ...arr.map((f) => URL.createObjectURL(f))]);
+    }, [existingImages, newImageFiles]);
+
+    const removeExisting = (index: number) => {
+        setExistingImages((prev) => prev.filter((_, i) => i !== index));
+    };
+
+    const removeNew = (index: number) => {
+        setNewImageFiles((prev) => prev.filter((_, i) => i !== index));
+        setNewImagePreviews((prev) => prev.filter((_, i) => i !== index));
     };
 
     const onDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
         setDragging(false);
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) handleFile(file);
-    }, []);
+        handleNewFiles(e.dataTransfer.files);
+    }, [handleNewFiles]);
 
     const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragging(true); };
     const onDragLeave = () => setDragging(false);
 
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSave = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
         setSaveStatus('loading');
         setSaveError('');
@@ -89,7 +101,9 @@ export default function EditProductPage() {
             fd.append('category', category);
             fd.append('description', description);
             fd.append('isNew', String(isNew));
-            if (newImageFile) fd.append('image', newImageFile);
+            fd.append('youtube_url', youtubeUrl);
+            fd.append('existing_images', JSON.stringify(existingImages));
+            newImageFiles.forEach((img, i) => fd.append(`image_${i}`, img));
 
             const res = await fetch(`/api/products/${id}`, { method: 'PUT', body: fd });
             const data = await res.json();
@@ -116,11 +130,10 @@ export default function EditProductPage() {
         }
     };
 
-    const displayImage = newImagePreview || currentImageUrl;
+    const totalImages = existingImages.length + newImageFiles.length;
 
     return (
         <div className="min-h-screen bg-[#0c0c0c] text-white flex flex-col">
-            {/* Header */}
             <header className="px-8 py-6 border-b border-white/10 flex items-center justify-between">
                 <button
                     onClick={() => router.push('/admin')}
@@ -148,62 +161,92 @@ export default function EditProductPage() {
 
                     {!loading && !fetchError && (
                         <>
-                            {/* Title */}
                             <div className="mb-12">
                                 <p className="text-xs uppercase tracking-[0.3em] text-white/40 mb-3">Редактирование</p>
                                 <h1 className="text-5xl font-serif leading-tight">{name || 'Товар'}</h1>
                             </div>
 
                             <form onSubmit={handleSave} className="space-y-7">
-                                {/* Image */}
+                                {/* Image gallery management */}
                                 <div>
                                     <label className="block text-xs uppercase tracking-[0.2em] text-white/50 mb-3">
-                                        Фотография *
+                                        Фотографии (до 6)
                                     </label>
-                                    <div
-                                        onClick={() => fileRef.current?.click()}
-                                        onDrop={onDrop}
-                                        onDragOver={onDragOver}
-                                        onDragLeave={onDragLeave}
-                                        className={`
-                                            relative cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-300 overflow-hidden h-72
-                                            ${dragging ? 'border-white/70 bg-white/5' : 'border-white/20 hover:border-white/40'}
-                                        `}
-                                    >
-                                        {displayImage ? (
-                                            <>
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img src={displayImage} alt="preview" className="absolute inset-0 w-full h-full object-cover" />
-                                                <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center opacity-0 hover:opacity-100 transition-opacity gap-2">
-                                                    <p className="text-sm">Нажмите для замены</p>
-                                                    {newImagePreview && (
-                                                        <span className="text-xs text-white/50 bg-white/10 px-3 py-1 rounded-full">Новое фото</span>
+
+                                    {/* Existing images */}
+                                    {existingImages.length > 0 && (
+                                        <div className="grid grid-cols-3 gap-3 mb-3">
+                                            {existingImages.map((url, i) => (
+                                                <div key={url} className="relative aspect-square rounded-xl overflow-hidden bg-white/5">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img src={url} alt="" className="w-full h-full object-cover" />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeExisting(i)}
+                                                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white text-xs flex items-center justify-center hover:bg-black"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                    {i === 0 && (
+                                                        <span className="absolute bottom-1 left-1 text-[10px] bg-black/60 text-white px-1.5 py-0.5 rounded">
+                                                            Главная
+                                                        </span>
                                                     )}
                                                 </div>
-                                            </>
-                                        ) : (
-                                            <div className="flex flex-col items-center justify-center h-full gap-3 text-white/40">
-                                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* New image previews */}
+                                    {newImagePreviews.length > 0 && (
+                                        <div className="grid grid-cols-3 gap-3 mb-3">
+                                            {newImagePreviews.map((src, i) => (
+                                                <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-white/5 ring-1 ring-white/30">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img src={src} alt="" className="w-full h-full object-cover" />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeNew(i)}
+                                                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white text-xs flex items-center justify-center hover:bg-black"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                    <span className="absolute bottom-1 left-1 text-[10px] bg-white/20 text-white px-1.5 py-0.5 rounded">Новое</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {/* Drop zone */}
+                                    {totalImages < 6 && (
+                                        <div
+                                            onClick={() => fileRef.current?.click()}
+                                            onDrop={onDrop}
+                                            onDragOver={onDragOver}
+                                            onDragLeave={onDragLeave}
+                                            className={`
+                                                relative cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-300 h-32
+                                                ${dragging ? 'border-white/70 bg-white/5' : 'border-white/20 hover:border-white/40'}
+                                            `}
+                                        >
+                                            <div className="flex flex-col items-center justify-center h-full gap-2 text-white/40">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                                                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
                                                     <polyline points="17 8 12 3 7 8" />
                                                     <line x1="12" y1="3" x2="12" y2="15" />
                                                 </svg>
-                                                <p className="text-sm">Перетащите или нажмите для выбора</p>
+                                                <p className="text-sm">Добавить фото ({totalImages}/6)</p>
                                             </div>
-                                        )}
-                                    </div>
+                                        </div>
+                                    )}
                                     <input
                                         ref={fileRef}
                                         type="file"
                                         accept="image/*"
+                                        multiple
                                         className="hidden"
-                                        onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
+                                        onChange={(e) => e.target.files && handleNewFiles(e.target.files)}
                                     />
-                                    {newImagePreview && (
-                                        <p className="text-xs text-white/40 mt-2">
-                                            Новое фото будет загружено при сохранении. Старое будет удалено.
-                                        </p>
-                                    )}
                                 </div>
 
                                 {/* Name */}
@@ -265,6 +308,20 @@ export default function EditProductPage() {
                                     />
                                 </div>
 
+                                {/* YouTube URL */}
+                                <div>
+                                    <label className="block text-xs uppercase tracking-[0.2em] text-white/50 mb-3">
+                                        YouTube Shorts (ссылка)
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={youtubeUrl}
+                                        onChange={(e) => setYoutubeUrl(e.target.value)}
+                                        placeholder="https://www.youtube.com/shorts/..."
+                                        className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-5 py-4 text-white placeholder-white/25 focus:outline-none focus:border-white/50 transition-colors text-sm"
+                                    />
+                                </div>
+
                                 {/* isNew toggle */}
                                 <div className="flex items-center gap-4">
                                     <button
@@ -277,14 +334,12 @@ export default function EditProductPage() {
                                     <span className="text-sm text-white/60">Отметить как Новинку</span>
                                 </div>
 
-                                {/* Save error */}
                                 {saveError && (
                                     <div className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-5 py-4">
                                         {saveError}
                                     </div>
                                 )}
 
-                                {/* Save button */}
                                 <button
                                     type="submit"
                                     disabled={saveStatus === 'loading' || saveStatus === 'success'}
@@ -312,7 +367,6 @@ export default function EditProductPage() {
                                     {saveStatus === 'error' && 'Попробовать снова'}
                                 </button>
 
-                                {/* Delete product */}
                                 <div className="pt-6 border-t border-white/10">
                                     <p className="text-xs text-white/30 uppercase tracking-[0.2em] mb-4">Опасная зона</p>
                                     <button
