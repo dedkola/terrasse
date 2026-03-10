@@ -156,8 +156,20 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
             return NextResponse.json({ error: 'Not found' }, { status: 404 });
         }
 
-        const imageUrl = existing.results[0].image;
-        await deleteFromR2(imageUrl);
+        // Delete all gallery images from R2
+        const imagesResult = await d1Query<{ url: string }>(
+            'SELECT url FROM product_images WHERE product_id = ?',
+            [id]
+        );
+        for (const { url } of imagesResult.results) {
+            await deleteFromR2(url);
+        }
+        await d1Query('DELETE FROM product_images WHERE product_id = ?', [id]);
+
+        // Delete primary image from R2
+        const primaryImage = existing.results[0].image;
+        if (primaryImage) await deleteFromR2(primaryImage);
+
         await d1Query('DELETE FROM products WHERE id = ?', [id]);
 
         return NextResponse.json({ success: true });
