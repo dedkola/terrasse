@@ -14,6 +14,7 @@ type ProductRow = {
     description: string;
     image: string;
     is_new: number;
+    youtube_url: string | null;
 };
 
 async function getProductBySlug(slug: string): Promise<Product | null> {
@@ -23,6 +24,13 @@ async function getProductBySlug(slug: string): Promise<Product | null> {
     );
     if (!result.results.length) return null;
     const p = result.results[0];
+
+    const imagesResult = await d1Query<{ url: string }>(
+        'SELECT url FROM product_images WHERE product_id = ? ORDER BY position ASC',
+        [p.id]
+    );
+    const images = imagesResult.results.map((r) => r.url);
+
     return {
         id: p.id,
         slug: p.slug || p.id,
@@ -31,6 +39,8 @@ async function getProductBySlug(slug: string): Promise<Product | null> {
         category: p.category,
         description: p.description,
         image: p.image,
+        images,
+        youtube_url: p.youtube_url ?? undefined,
         isNew: Boolean(p.is_new),
     };
 }
