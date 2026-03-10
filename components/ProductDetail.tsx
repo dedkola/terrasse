@@ -8,11 +8,17 @@ import Image from 'next/image';
 import { useStateContext } from './StateProvider';
 import { Product } from '@/types';
 
+function extractYouTubeId(url: string): string | null {
+    const match = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
+}
+
 const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
     const router = useRouter();
     const { addToCart } = useStateContext();
     const [selectedSize, setSelectedSize] = useState('M');
     const [quantity, setQuantity] = useState(1);
+    const [selected, setSelected] = useState<number | 'video'>(0);
     const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
     useEffect(() => {
@@ -35,36 +41,74 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 {/* Image Gallery */}
-                <div className="space-y-6">
+                <div className="space-y-4">
+                    {/* Main display */}
                     <motion.div
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         className="aspect-[3/4] bg-stone-100 rounded-2xl overflow-hidden"
                     >
-                        <Image
-                            src={product.image}
-                            alt={product.name}
-                            width={800}
-                            height={1200}
-                            className="w-full h-full object-cover"
-                            referrerPolicy="no-referrer"
-                            priority
-                        />
+                        {selected === 'video' && product.youtube_url ? (
+                            (() => {
+                                const videoId = extractYouTubeId(product.youtube_url);
+                                return videoId ? (
+                                    <iframe
+                                        src={`https://www.youtube.com/embed/${videoId}`}
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full"
+                                        title={product.name}
+                                    />
+                                ) : null;
+                            })()
+                        ) : (
+                            <Image
+                                src={product.images && product.images.length > 0 ? product.images[selected as number] : product.image}
+                                alt={product.name}
+                                width={800}
+                                height={1200}
+                                className="w-full h-full object-cover"
+                                referrerPolicy="no-referrer"
+                                priority
+                            />
+                        )}
                     </motion.div>
-                    <div className="grid grid-cols-3 gap-4">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="aspect-square bg-stone-100 rounded-xl overflow-hidden cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                                <Image
-                                    src={product.image}
-                                    alt={`${product.name} view ${i}`}
-                                    width={400}
-                                    height={400}
-                                    className="w-full h-full object-cover"
-                                    referrerPolicy="no-referrer"
-                                />
-                            </div>
-                        ))}
-                    </div>
+
+                    {/* Thumbnails — only render if there are multiple images OR a video */}
+                    {((product.images && product.images.length > 1) || product.youtube_url) && (
+                        <div className="grid grid-cols-4 gap-3">
+                            {(product.images ?? [product.image]).map((url, i) => (
+                                <button
+                                    key={url}
+                                    onClick={() => setSelected(i)}
+                                    className={`aspect-square bg-stone-100 rounded-xl overflow-hidden transition-all ${
+                                        selected === i ? 'ring-2 ring-black' : 'opacity-60 hover:opacity-100'
+                                    }`}
+                                >
+                                    <Image
+                                        src={url}
+                                        alt={`${product.name} view ${i + 1}`}
+                                        width={200}
+                                        height={200}
+                                        className="w-full h-full object-cover"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                </button>
+                            ))}
+                            {product.youtube_url && (
+                                <button
+                                    onClick={() => setSelected('video')}
+                                    className={`aspect-square bg-stone-900 rounded-xl overflow-hidden flex items-center justify-center transition-all ${
+                                        selected === 'video' ? 'ring-2 ring-black' : 'opacity-60 hover:opacity-100'
+                                    }`}
+                                >
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+                                        <polygon points="5,3 19,12 5,21" />
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Product Info */}
