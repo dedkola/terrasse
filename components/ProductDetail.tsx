@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Minus, Plus, Heart } from 'lucide-react';
+import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useStateContext } from './StateProvider';
 import { Product } from '@/types';
 
 function extractYouTubeId(url: string): string | null {
@@ -15,11 +14,7 @@ function extractYouTubeId(url: string): string | null {
 
 const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
     const router = useRouter();
-    const { addToCart } = useStateContext();
-    const [selectedSize, setSelectedSize] = useState('M');
-    const [quantity, setQuantity] = useState(1);
     const [selected, setSelected] = useState<number | 'video'>(0);
-    const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -115,6 +110,9 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
                 <div className="flex flex-col">
                     <div className="mb-8">
                         <p className="text-xs uppercase tracking-[0.3em] text-brand-muted mb-2">{product.category}</p>
+                        {product.code && (
+                            <p className="text-[11px] text-brand-muted mb-2">#{String(product.code).padStart(4, '0')}</p>
+                        )}
                         <h1 className="text-4xl md:text-5xl font-serif mb-4">{product.name}</h1>
                         <p className="text-2xl font-medium">₴{product.price}</p>
                     </div>
@@ -123,58 +121,6 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
                         <p className="text-sm text-brand-muted leading-relaxed">
                             {product.description || "Созданное с тщательным вниманием к деталям, это изделие воплощает приверженность Terrasse качеству и неподвластному времени стилю. Разработано для современного человека, ценящего как форму, так и функциональность."}
                         </p>
-                    </div>
-
-                    <div className="mb-8">
-                        <div className="flex justify-between items-center mb-4">
-                            <span className="text-xs uppercase tracking-widest font-bold">Выберите размер</span>
-                            <button className="text-[10px] uppercase tracking-widest text-brand-muted border-b border-brand-muted">Таблица размеров</button>
-                        </div>
-                        <div className="flex space-x-3">
-                            {sizes.map((size) => (
-                                <button
-                                    key={size}
-                                    onClick={() => setSelectedSize(size)}
-                                    className={`w-12 h-12 rounded-full border text-xs font-medium transition-all ${selectedSize === size
-                                        ? 'bg-black border-black text-white'
-                                        : 'border-stone-200 hover:border-black'
-                                        }`}
-                                >
-                                    {size}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="mb-12">
-                        <span className="text-xs uppercase tracking-widest font-bold mb-4 block">Количество</span>
-                        <div className="flex items-center space-x-6 border border-stone-200 w-fit px-4 py-2 rounded-full">
-                            <button
-                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="hover:opacity-60 transition-opacity"
-                            >
-                                <Minus size={16} />
-                            </button>
-                            <span className="text-sm font-medium w-4 text-center">{quantity}</span>
-                            <button
-                                onClick={() => setQuantity(quantity + 1)}
-                                className="hover:opacity-60 transition-opacity"
-                            >
-                                <Plus size={16} />
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="flex space-x-4">
-                        <button
-                            onClick={addToCart}
-                            className="flex-1 bg-black text-white py-5 rounded-full text-xs uppercase tracking-widest font-bold hover:bg-stone-800 transition-all active:scale-[0.98]"
-                        >
-                            В корзину
-                        </button>
-                        <button className="p-5 border border-stone-200 rounded-full hover:border-black transition-colors">
-                            <Heart size={20} />
-                        </button>
                     </div>
 
                     <div className="mt-12 pt-12 border-t border-stone-100 space-y-6">
