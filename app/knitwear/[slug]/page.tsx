@@ -12,8 +12,6 @@ type ProductRow = {
     price: number;
     category: string;
     description: string;
-    description_material: string;
-    description_style: string;
     image: string;
     is_new: number;
     youtube_url: string | null;
@@ -41,8 +39,6 @@ async function getProductBySlug(slug: string): Promise<Product | null> {
         price: p.price,
         category: p.category,
         description: p.description,
-        description_material: p.description_material,
-        description_style: p.description_style,
         image: p.image,
         images,
         youtube_url: p.youtube_url ?? undefined,
@@ -82,7 +78,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         notFound();
     }
 
-    if (categoryToRoute(product.category) !== '/jeans') {
+    if (categoryToRoute(product.category) !== '/knitwear') {
         redirect(`${categoryToRoute(product.category)}/${product.slug}`);
     }
 
@@ -92,4 +88,3 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </main>
     );
 }
-

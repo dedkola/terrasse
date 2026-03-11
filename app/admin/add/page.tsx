@@ -68,7 +68,7 @@ export default function AddProductPage() {
             if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
 
             setStatus('success');
-            setTimeout(() => router.push('/jeans'), 1800);
+            setTimeout(() => router.push('/tops'), 1800);
         } catch (err) {
             setStatus('error');
             setErrorMsg(String(err));
