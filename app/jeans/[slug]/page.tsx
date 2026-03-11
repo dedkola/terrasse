@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { Product } from '@/types';
 import { d1Query } from '@/lib/d1';
+import { categoryToRoute } from '@/lib/categoryToRoute';
 import ProductDetail from '@/components/ProductDetail';
 
 type ProductRow = {
@@ -79,6 +80,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     if (!product) {
         notFound();
+    }
+
+    if (categoryToRoute(product.category) !== '/jeans') {
+        redirect(`${categoryToRoute(product.category)}/${product.slug}`);
     }
 
     return (
