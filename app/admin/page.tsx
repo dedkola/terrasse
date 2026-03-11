@@ -11,6 +11,7 @@ type Product = {
     category: string;
     image: string;
     isNew: boolean;
+    code?: number;
 };
 
 export default function AdminPage() {
@@ -129,6 +130,7 @@ export default function AdminPage() {
                                     </div>
                                     <p className="text-xs text-white/40">
                                         {product.category} · ₴{product.price}
+                                        {product.code != null ? ` · #${String(product.code).padStart(4, '0')}` : ''}
                                     </p>
                                 </div>
 

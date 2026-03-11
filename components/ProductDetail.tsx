@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { ArrowLeft, Minus, Plus, Heart } from 'lucide-react';
+import { ArrowLeft, Minus, Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useStateContext } from './StateProvider';
 import { Product } from '@/types';
 
 function extractYouTubeId(url: string): string | null {
@@ -15,11 +14,7 @@ function extractYouTubeId(url: string): string | null {
 
 const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
     const router = useRouter();
-    const { addToCart } = useStateContext();
-    const [selectedSize, setSelectedSize] = useState('M');
-    const [quantity, setQuantity] = useState(1);
     const [selected, setSelected] = useState<number | 'video'>(0);
-    const sizes = ['XS', 'S', 'M', 'L', 'XL'];
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -115,6 +110,9 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
                 <div className="flex flex-col">
                     <div className="mb-8">
                         <p className="text-xs uppercase tracking-[0.3em] text-brand-muted mb-2">{product.category}</p>
+                        {product.code != null && (
+                            <p className="text-[11px] text-brand-muted mb-2">#{String(product.code).padStart(4, '0')}</p>
+                        )}
                         <h1 className="text-4xl md:text-5xl font-serif mb-4">{product.name}</h1>
                         <p className="text-2xl font-medium">₴{product.price}</p>
                     </div>
