@@ -51,7 +51,7 @@ const ProductCard = ({ product }: { product: Product; key?: React.Key }) => {
                         <h3 className="text-sm font-medium text-brand-ink">{product.name}</h3>
                         <p className="text-xs text-brand-muted mt-1">{product.category}</p>
                     </div>
-                    <p className="text-sm font-medium">${product.price}</p>
+                    <p className="text-sm font-medium">₴{product.price}</p>
                 </div>
             </Link>
         </motion.div>

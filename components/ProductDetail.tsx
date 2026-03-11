@@ -116,7 +116,7 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
                     <div className="mb-8">
                         <p className="text-xs uppercase tracking-[0.3em] text-brand-muted mb-2">{product.category}</p>
                         <h1 className="text-4xl md:text-5xl font-serif mb-4">{product.name}</h1>
-                        <p className="text-2xl font-medium">${product.price}</p>
+                        <p className="text-2xl font-medium">₴{product.price}</p>
                     </div>
 
                     <div className="mb-8">
@@ -200,7 +200,7 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
                                 <Minus size={14} className="hidden group-open:block" />
                             </summary>
                             <div className="pt-4 text-sm text-brand-muted leading-relaxed">
-                                <p>Бесплатная стандартная доставка для всех заказов от $200. Возврат принимается в течение 30 дней с момента покупки.</p>
+                                <p>Бесплатная стандартная доставка для всех заказов от ₴200. Возврат принимается в течение 30 дней с момента покупки.</p>
                             </div>
                         </details>
                     </div>
