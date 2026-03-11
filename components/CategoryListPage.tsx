@@ -1,5 +1,6 @@
 import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
+import { d1Query } from '@/lib/d1';
 
 interface CategoryListPageProps {
     title: string;
@@ -9,12 +10,33 @@ interface CategoryListPageProps {
 
 async function getProductsByCategory(filter: string | string[]): Promise<Product[]> {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-        const res = await fetch(`${baseUrl}/api/products`, { cache: 'no-store' });
-        if (!res.ok) return [];
-        const all: Product[] = await res.json();
         const filters = Array.isArray(filter) ? filter : [filter];
-        return all.filter((p) => filters.some((f) => p.category === f || p.category.includes(f)));
+        const placeholders = filters.map(() => '?').join(', ');
+        const result = await d1Query<{
+            id: string;
+            slug: string;
+            name: string;
+            price: number;
+            category: string;
+            description: string;
+            image: string;
+            is_new: number;
+            code: number | null;
+        }>(
+            `SELECT * FROM products WHERE category IN (${placeholders}) ORDER BY created_at DESC`,
+            filters
+        );
+        return result.results.map((p) => ({
+            id: p.id,
+            slug: p.slug || p.id,
+            name: p.name,
+            price: p.price,
+            category: p.category,
+            description: p.description,
+            image: p.image,
+            isNew: Boolean(p.is_new),
+            code: p.code ?? undefined,
+        }));
     } catch {
         return [];
     }
