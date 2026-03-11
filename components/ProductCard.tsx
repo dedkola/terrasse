@@ -5,12 +5,7 @@ import { motion } from 'motion/react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/types';
-
-function categoryToRoute(category: string): string {
-    if (category === 'Верхняя одежда') return '/jackets';
-    if (category === 'Трикотаж') return '/tops';
-    return '/jeans';
-}
+import { categoryToRoute } from '@/lib/categoryToRoute';
 
 const ProductCard = ({ product }: { product: Product; key?: React.Key }) => {
     const route = categoryToRoute(product.category);
