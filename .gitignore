@@ -11,7 +11,7 @@
 !.yarn/versions
 /template
 /photos
-
+/.claude/
 # testing
 /coverage
 
