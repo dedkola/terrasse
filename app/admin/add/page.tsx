@@ -12,6 +12,8 @@ export default function AddProductPage() {
     const [price, setPrice] = useState('');
     const [category, setCategory] = useState('Деним');
     const [description, setDescription] = useState('');
+    const [descriptionMaterial, setDescriptionMaterial] = useState('');
+    const [descriptionStyle, setDescriptionStyle] = useState('');
     const [isNew, setIsNew] = useState(false);
     const [youtubeUrl, setYoutubeUrl] = useState('');
     const [images, setImages] = useState<File[]>([]);
@@ -55,6 +57,8 @@ export default function AddProductPage() {
             fd.append('price', price);
             fd.append('category', category);
             fd.append('description', description);
+            fd.append('description_material', descriptionMaterial);
+            fd.append('description_style', descriptionStyle);
             fd.append('isNew', String(isNew));
             fd.append('youtube_url', youtubeUrl);
             images.forEach((img, i) => fd.append(`image_${i}`, img));
@@ -197,7 +201,7 @@ export default function AddProductPage() {
                             </div>
                         </div>
 
-                        {/* Description */}
+                        {/* Описание */}
                         <div>
                             <label className="block text-xs uppercase tracking-[0.2em] text-white/50 mb-3">
                                 Описание
@@ -205,8 +209,36 @@ export default function AddProductPage() {
                             <textarea
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                rows={4}
-                                placeholder="Расскажите о материале, крое и особенностях модели..."
+                                rows={3}
+                                placeholder="Общее описание модели..."
+                                className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-5 py-4 text-white placeholder-white/25 focus:outline-none focus:border-white/50 transition-colors text-sm resize-none"
+                            />
+                        </div>
+
+                        {/* Материал */}
+                        <div>
+                            <label className="block text-xs uppercase tracking-[0.2em] text-white/50 mb-3">
+                                Материал
+                            </label>
+                            <textarea
+                                value={descriptionMaterial}
+                                onChange={(e) => setDescriptionMaterial(e.target.value)}
+                                rows={3}
+                                placeholder="Состав ткани, уход..."
+                                className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-5 py-4 text-white placeholder-white/25 focus:outline-none focus:border-white/50 transition-colors text-sm resize-none"
+                            />
+                        </div>
+
+                        {/* Стиль */}
+                        <div>
+                            <label className="block text-xs uppercase tracking-[0.2em] text-white/50 mb-3">
+                                Стиль
+                            </label>
+                            <textarea
+                                value={descriptionStyle}
+                                onChange={(e) => setDescriptionStyle(e.target.value)}
+                                rows={3}
+                                placeholder="Стиль, с чем носить, на какой случай..."
                                 className="w-full bg-white/[0.04] border border-white/15 rounded-xl px-5 py-4 text-white placeholder-white/25 focus:outline-none focus:border-white/50 transition-colors text-sm resize-none"
                             />
                         </div>

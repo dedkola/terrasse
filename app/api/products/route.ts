@@ -25,6 +25,8 @@ export async function POST(request: NextRequest) {
         const price = formData.get('price') as string;
         const category = formData.get('category') as string;
         const description = formData.get('description') as string;
+        const descriptionMaterial = formData.get('description_material') as string;
+        const descriptionStyle = formData.get('description_style') as string;
         const isNew = formData.get('isNew') === 'true' ? 1 : 0;
         const youtubeUrl = (formData.get('youtube_url') as string) || null;
 
@@ -54,9 +56,9 @@ export async function POST(request: NextRequest) {
         const primaryImage = imageUrls[0];
 
         await d1Query(
-            `INSERT INTO products (id, slug, name, price, category, description, image, is_new, youtube_url)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, slug, name, parseFloat(price), category, description || '', primaryImage, isNew, youtubeUrl]
+            `INSERT INTO products (id, slug, name, price, category, description, description_material, description_style, image, is_new, youtube_url)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [id, slug, name, parseFloat(price), category, description || '', descriptionMaterial || '', descriptionStyle || '', primaryImage, isNew, youtubeUrl]
         );
 
         for (let i = 0; i < imageUrls.length; i++) {
