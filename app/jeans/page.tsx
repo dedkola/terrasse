@@ -35,6 +35,7 @@ async function getJeansProducts(): Promise<Product[]> {
       category: p.category,
       description: p.description,
       image: p.image,
+      images: [],
       isNew: Boolean(p.is_new),
     }));
   } catch {
