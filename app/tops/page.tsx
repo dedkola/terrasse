@@ -2,16 +2,16 @@ import { Metadata } from 'next';
 import CategoryListPage from '@/components/CategoryListPage';
 
 export const metadata: Metadata = {
-    title: 'Трикотаж — Terrasse',
-    description: 'Коллекция трикотажа Terrasse.',
+    title: 'Топы — Terrasse',
+    description: 'Коллекция топов Terrasse.',
 };
 
 export default function TopsCategoryPage() {
     return (
         <CategoryListPage
-            title="Трикотаж"
+            title="Топы"
             subtitle=""
-            categoryFilter="Трикотаж"
+            categoryFilter="Топы"
         />
     );
 }

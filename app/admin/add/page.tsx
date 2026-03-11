@@ -3,14 +3,14 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
-const CATEGORIES = ['Деним', 'Топы', 'Трикотаж', 'Верхняя одежда'];
+const CATEGORIES = ['Топы', 'Трикотаж', 'Верхняя одежда'];
 
 export default function AddProductPage() {
     const router = useRouter();
 
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
-    const [category, setCategory] = useState('Деним');
+    const [category, setCategory] = useState('Топы');
     const [description, setDescription] = useState('');
     const [descriptionMaterial, setDescriptionMaterial] = useState('');
     const [descriptionStyle, setDescriptionStyle] = useState('');
@@ -68,7 +68,7 @@ export default function AddProductPage() {
             if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
 
             setStatus('success');
-            setTimeout(() => router.push('/jeans'), 1800);
+            setTimeout(() => router.push('/tops'), 1800);
         } catch (err) {
             setStatus('error');
             setErrorMsg(String(err));

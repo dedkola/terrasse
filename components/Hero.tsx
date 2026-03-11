@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Hero = () => {
     return (
@@ -37,10 +38,10 @@ const Hero = () => {
                         Искусство <br />
                         <span className="italic">Простоты</span>
                     </h1>
-                    <button className="group flex items-center space-x-4 bg-white text-black px-8 py-4 rounded-full font-medium transition-all hover:bg-black hover:text-white">
+                    <Link href="/collection" className="group flex items-center space-x-4 bg-white text-black px-8 py-4 rounded-full font-medium transition-all hover:bg-black hover:text-white">
                         <span>Смотреть коллекцию</span>
                         <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    </Link>
                 </motion.div>
             </div>
         </section>
