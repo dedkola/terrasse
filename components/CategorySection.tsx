@@ -8,7 +8,7 @@ import Image from 'next/image';
 const CategorySection = () => {
     const categories = [
         { name: 'Верхняя одежда', href: '/jackets', image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&q=80&w=800' },
-        { name: 'Деним', href: '/jeans', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=800' },
+        { name: 'Топы', href: '/jeans', image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&q=80&w=800' },
         { name: 'Трикотаж', href: '/tops', image: 'https://images.unsplash.com/photo-1574201635302-388dd92a4c3f?auto=format&fit=crop&q=80&w=800' }
     ];
 

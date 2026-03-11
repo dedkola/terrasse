@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-const CATEGORIES = ['Деним', 'Топы', 'Трикотаж', 'Верхняя одежда'];
+const CATEGORIES = ['Топы', 'Трикотаж', 'Верхняя одежда'];
 
 type Product = {
     id: string;
@@ -28,7 +28,7 @@ export default function EditProductPage() {
 
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
-    const [category, setCategory] = useState('Деним');
+    const [category, setCategory] = useState('Топы');
     const [description, setDescription] = useState('');
     const [descriptionMaterial, setDescriptionMaterial] = useState('');
     const [descriptionStyle, setDescriptionStyle] = useState('');
