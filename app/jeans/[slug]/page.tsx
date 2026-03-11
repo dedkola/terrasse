@@ -58,7 +58,7 @@ export async function generateMetadata(
         title: `${product.name} — Terrasse`,
         description: product.description
             ? product.description.slice(0, 160)
-            : `${product.name} из коллекции Terrasse. Цена: ${product.price} ₽.`,
+            : `${product.name} із колекції Terrasse. Ціна: ${product.price} ₴.`,
         openGraph: {
             title: product.name,
             description: product.description?.slice(0, 160),

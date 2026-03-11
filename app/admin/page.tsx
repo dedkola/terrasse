@@ -57,9 +57,9 @@ export default function AdminPage() {
         <div className="min-h-screen bg-[#0c0c0c] text-white flex flex-col">
             {/* Header */}
             <header className="px-8 py-6 border-b border-white/10 flex items-center justify-between">
-                <a href="/" className="text-xs uppercase tracking-[0.3em] text-white/50 hover:text-white transition-colors">
+                <Link href="/" className="text-xs uppercase tracking-[0.3em] text-white/50 hover:text-white transition-colors">
                     ← Terrasse
-                </a>
+                </Link>
                 <span className="text-xs uppercase tracking-[0.3em] text-white/30">Admin Panel</span>
             </header>
 
@@ -128,7 +128,7 @@ export default function AdminPage() {
                                         )}
                                     </div>
                                     <p className="text-xs text-white/40">
-                                        {product.category} · €{product.price}
+                                        {product.category} · ₴{product.price}
                                     </p>
                                 </div>
 
