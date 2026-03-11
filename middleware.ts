@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+export const runtime = 'edge';
+
 function unauthorized(message: string) {
   return new NextResponse(message, {
     status: 401,
@@ -11,14 +13,6 @@ function unauthorized(message: string) {
 }
 
 function decodeBase64(value: string): string | null {
-  if (typeof Buffer !== "undefined") {
-    try {
-      return Buffer.from(value, "base64").toString("utf-8");
-    } catch {
-      // Fall through to Web API decoding.
-    }
-  }
-
   if (typeof atob === "function") {
     try {
       const binary = atob(value);
@@ -32,7 +26,7 @@ function decodeBase64(value: string): string | null {
   return null;
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   // Only protect the admin route.
   if (request.nextUrl.pathname.startsWith("/admin")) {
     const authHeader = request.headers.get("authorization");
