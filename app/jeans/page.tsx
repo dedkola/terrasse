@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+
+export const runtime = 'edge';
 import { Product } from '@/types';
 import ProductCard from '@/components/ProductCard';
 

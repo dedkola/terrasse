@@ -44,6 +44,7 @@ async function getProductBySlug(slug: string): Promise<Product | null> {
     };
 }
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(

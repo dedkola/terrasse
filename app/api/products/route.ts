@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { d1Query } from '@/lib/d1';
 import { uploadToR2 } from '@/lib/r2';
 import { slugify } from '@/lib/slugify';
-import { randomUUID } from 'crypto';
+
+export const runtime = 'edge';
 
 async function generateUniqueSlug(name: string): Promise<string> {
     const base = slugify(name);
@@ -38,9 +39,9 @@ export async function POST(request: NextRequest) {
             const file = formData.get(`image_${i}`) as File | null;
             if (!file || file.size === 0) continue;
             const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
+            const buffer = new Uint8Array(bytes);
             const ext = file.name.split('.').pop() || 'jpg';
-            const filename = `${randomUUID()}.${ext}`;
+            const filename = `${crypto.randomUUID()}.${ext}`;
             const url = await uploadToR2(buffer, filename, file.type);
             imageUrls.push(url);
         }
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'At least one image is required' }, { status: 400 });
         }
 
-        const id = randomUUID();
+        const id = crypto.randomUUID();
         const slug = await generateUniqueSlug(name);
         const primaryImage = imageUrls[0];
 
@@ -62,7 +63,7 @@ export async function POST(request: NextRequest) {
         for (let i = 0; i < imageUrls.length; i++) {
             await d1Query(
                 'INSERT INTO product_images (id, product_id, url, position) VALUES (?, ?, ?, ?)',
-                [randomUUID(), id, imageUrls[i], i]
+                [crypto.randomUUID(), id, imageUrls[i], i]
             );
         }
 

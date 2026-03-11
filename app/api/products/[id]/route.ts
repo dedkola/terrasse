@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { d1Query } from '@/lib/d1';
 import { uploadToR2, deleteFromR2 } from '@/lib/r2';
 import { slugify } from '@/lib/slugify';
-import { randomUUID } from 'crypto';
+
+export const runtime = 'edge';
 
 type ProductRow = {
     id: string;
@@ -106,9 +107,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             const file = formData.get(`image_${i}`) as File | null;
             if (!file || file.size === 0) continue;
             const bytes = await file.arrayBuffer();
-            const buffer = Buffer.from(bytes);
+            const buffer = new Uint8Array(bytes);
             const ext = file.name.split('.').pop() || 'jpg';
-            const filename = `${randomUUID()}.${ext}`;
+            const filename = `${crypto.randomUUID()}.${ext}`;
             const url = await uploadToR2(buffer, filename, file.type);
             newImageUrls.push(url);
         }
@@ -120,7 +121,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         for (let i = 0; i < allImages.length; i++) {
             await d1Query(
                 'INSERT INTO product_images (id, product_id, url, position) VALUES (?, ?, ?, ?)',
-                [randomUUID(), id, allImages[i], i]
+                [crypto.randomUUID(), id, allImages[i], i]
             );
         }
 

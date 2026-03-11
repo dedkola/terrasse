@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { d1Query } from '@/lib/d1';
 import { Product } from '@/types';
 
+export const runtime = 'edge';
 export const revalidate = 3600; // regenerate sitemap hourly
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const runtime = 'edge';
+
 export default async function TrendArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const resolvedParams = await params;
 

@@ -13,7 +13,7 @@ const s3 = new S3Client({
 });
 
 export async function uploadToR2(
-    fileBuffer: Buffer,
+    fileBuffer: Uint8Array,
     filename: string,
     contentType: string
 ): Promise<string> {
