@@ -110,7 +110,7 @@ const ProductDetail = ({ product }: { product: Product; key?: React.Key }) => {
                 <div className="flex flex-col">
                     <div className="mb-8">
                         <p className="text-xs uppercase tracking-[0.3em] text-brand-muted mb-2">{product.category}</p>
-                        {product.code && (
+                        {product.code != null && (
                             <p className="text-[11px] text-brand-muted mb-2">#{String(product.code).padStart(4, '0')}</p>
                         )}
                         <h1 className="text-4xl md:text-5xl font-serif mb-4">{product.name}</h1>

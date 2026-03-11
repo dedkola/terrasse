@@ -130,7 +130,7 @@ export default function AdminPage() {
                                     </div>
                                     <p className="text-xs text-white/40">
                                         {product.category} · ₴{product.price}
-                                        {product.code ? ` · #${String(product.code).padStart(4, '0')}` : ''}
+                                        {product.code != null ? ` · #${String(product.code).padStart(4, '0')}` : ''}
                                     </p>
                                 </div>
 

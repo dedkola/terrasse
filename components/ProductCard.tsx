@@ -39,7 +39,7 @@ const ProductCard = ({ product }: { product: Product; key?: React.Key }) => {
                     <div>
                         <h3 className="text-sm font-medium text-brand-ink">{product.name}</h3>
                         <p className="text-xs text-brand-muted mt-1">{product.category}</p>
-                        {product.code && (
+                        {product.code != null && (
                             <p className="text-[10px] text-brand-muted mt-0.5">#{String(product.code).padStart(4, '0')}</p>
                         )}
                     </div>

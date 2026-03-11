@@ -5,7 +5,7 @@ export interface Product {
   price: number;
   category: string;
   image: string;
-  images: string[];
+  images?: string[];
   youtube_url?: string;
   isNew?: boolean;
   description?: string;

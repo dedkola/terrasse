@@ -14,6 +14,7 @@ type ProductRow = {
     image: string;
     is_new: number;
     youtube_url: string | null;
+    code: number | null;
 };
 
 async function getProductBySlug(slug: string): Promise<Product | null> {
@@ -41,6 +42,7 @@ async function getProductBySlug(slug: string): Promise<Product | null> {
         images,
         youtube_url: p.youtube_url ?? undefined,
         isNew: Boolean(p.is_new),
+        code: p.code ?? undefined,
     };
 }
 
