@@ -53,10 +53,16 @@ export async function POST(request: NextRequest) {
         const slug = await generateUniqueSlug(name);
         const primaryImage = imageUrls[0];
 
+        // Get next code
+        const codeResult = await d1Query<{ next_code: number }>(
+            'SELECT COALESCE(MAX(code), 0) + 1 AS next_code FROM products'
+        );
+        const nextCode = codeResult.results[0]?.next_code ?? 1;
+
         await d1Query(
-            `INSERT INTO products (id, slug, name, price, category, description, image, is_new, youtube_url)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [id, slug, name, parseFloat(price), category, description || '', primaryImage, isNew, youtubeUrl]
+            `INSERT INTO products (id, slug, name, price, category, description, image, is_new, youtube_url, code)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [id, slug, name, parseFloat(price), category, description || '', primaryImage, isNew, youtubeUrl, nextCode]
         );
 
         for (let i = 0; i < imageUrls.length; i++) {
@@ -66,7 +72,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        return NextResponse.json({ success: true, id, slug, imageUrl: primaryImage });
+        return NextResponse.json({ success: true, id, slug, imageUrl: primaryImage, code: nextCode });
     } catch (err) {
         console.error('Upload error:', err);
         return NextResponse.json({ error: String(err) }, { status: 500 });
