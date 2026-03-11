@@ -11,6 +11,8 @@ type ProductRow = {
     price: number;
     category: string;
     description: string;
+    description_material: string;
+    description_style: string;
     image: string;
     is_new: number;
     youtube_url: string | null;
@@ -53,6 +55,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
             price: p.price,
             category: p.category,
             description: p.description,
+            description_material: p.description_material,
+            description_style: p.description_style,
             image: p.image,
             images,
             youtube_url: p.youtube_url ?? undefined,
@@ -78,6 +82,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         const price = formData.get('price') as string;
         const category = formData.get('category') as string;
         const description = formData.get('description') as string;
+        const descriptionMaterial = formData.get('description_material') as string;
+        const descriptionStyle = formData.get('description_style') as string;
         const isNew = formData.get('isNew') === 'true' ? 1 : 0;
         const youtubeUrl = (formData.get('youtube_url') as string) || null;
 
@@ -136,8 +142,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             : (current.slug || slugify(name));
 
         await d1Query(
-            `UPDATE products SET name=?, slug=?, price=?, category=?, description=?, is_new=?, image=?, youtube_url=? WHERE id=?`,
-            [name, slug, parseFloat(price), category, description || '', isNew, primaryImage, youtubeUrl, id]
+            `UPDATE products SET name=?, slug=?, price=?, category=?, description=?, description_material=?, description_style=?, is_new=?, image=?, youtube_url=? WHERE id=?`,
+            [name, slug, parseFloat(price), category, description || '', descriptionMaterial || '', descriptionStyle || '', isNew, primaryImage, youtubeUrl, id]
         );
 
         return NextResponse.json({ success: true, slug });

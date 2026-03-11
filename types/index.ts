@@ -9,5 +9,6 @@ export interface Product {
   youtube_url?: string;
   isNew?: boolean;
   description?: string;
-  code?: number;
+  description_material?: string;
+  description_style?: string;
 }
