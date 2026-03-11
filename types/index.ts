@@ -11,4 +11,5 @@ export interface Product {
   description?: string;
   description_material?: string;
   description_style?: string;
+  code?: number;
 }
