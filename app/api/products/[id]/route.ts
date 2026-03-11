@@ -19,8 +19,8 @@ type ProductRow = {
 async function generateUniqueSlug(name: string, excludeId: string): Promise<string> {
     const base = slugify(name);
     const result = await d1Query<{ slug: string }>(
-        'SELECT slug FROM products WHERE slug LIKE ? AND id != ?',
-        [`${base}%`, excludeId]
+        'SELECT slug FROM products WHERE slug >= ? AND slug < ? AND id != ?',
+        [base, base + '~', excludeId]
     );
     const existing = result.results.map((r) => r.slug);
     if (!existing.includes(base)) return base;

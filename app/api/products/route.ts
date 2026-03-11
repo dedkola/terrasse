@@ -7,8 +7,8 @@ import { randomUUID } from 'crypto';
 async function generateUniqueSlug(name: string): Promise<string> {
     const base = slugify(name);
     const result = await d1Query<{ slug: string }>(
-        'SELECT slug FROM products WHERE slug LIKE ?',
-        [`${base}%`]
+        'SELECT slug FROM products WHERE slug >= ? AND slug < ?',
+        [base, base + '~']
     );
     const existing = result.results.map((r) => r.slug);
     if (!existing.includes(base)) return base;
