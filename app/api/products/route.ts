@@ -84,6 +84,7 @@ export async function GET() {
             description: string;
             image: string;
             is_new: number;
+            code: number | null;
         }>('SELECT * FROM products ORDER BY created_at DESC');
 
         const products = result.results.map((p) => ({
@@ -95,6 +96,7 @@ export async function GET() {
             description: p.description,
             image: p.image,
             isNew: Boolean(p.is_new),
+            code: p.code ?? undefined,
         }));
 
         return NextResponse.json(products);
