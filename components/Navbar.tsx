@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { ShoppingBag, Search, Menu, X } from "lucide-react";
-import Link from "next/link";
-import { useStateContext } from "./StateProvider";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ShoppingBag, Search, Menu, X } from 'lucide-react';
+import Link from 'next/link';
+import { useStateContext } from './StateProvider';
 
 const Navbar = () => {
   const { cartCount } = useStateContext();
@@ -13,16 +13,16 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white/80 backdrop-blur-md py-4 shadow-sm" : "bg-transparent py-6"}`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'}`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="flex-1 hidden md:flex items-center space-x-8">
           <a href="/jackets" className="nav-link">
             Верхняя одежда
           </a>
@@ -37,7 +37,7 @@ const Navbar = () => {
           </a>
         </div>
 
-        <div className="flex-1 flex justify-center md:justify-center">
+        <div className="flex justify-center">
           <Link
             href="/"
             className="logo-text text-2xl md:text-3xl font-bold tracking-[0.2em] outline-none"
@@ -46,7 +46,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex items-center space-x-6">
+        <div className="flex-1 flex items-center justify-end space-x-6">
           <button className="p-2 hover:opacity-60 transition-opacity hidden md:block">
             <Search size={20} />
           </button>
@@ -58,10 +58,7 @@ const Navbar = () => {
               </span>
             )}
           </button>
-          <button
-            className="md:hidden p-2"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
+          <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(true)}>
             <Menu size={20} />
           </button>
         </div>
@@ -71,10 +68,10 @@ const Navbar = () => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ x: "100%" }}
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className="fixed inset-0 bg-white z-[60] p-6 flex flex-col"
           >
             <div className="flex justify-end">
@@ -94,6 +91,13 @@ const Navbar = () => {
               </a>
               <a href="#" className="block text-3xl font-serif italic">
                 Журнал
+              </a>
+              <a
+                href="/about"
+                className="block text-3xl font-serif italic"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                О нас
               </a>
             </div>
           </motion.div>
