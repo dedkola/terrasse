@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-const CATEGORIES = ['Топы', 'Трикотаж', 'Верхняя одежда'];
+const CATEGORIES = ['Топы', 'Трикотаж', 'Верхняя одежда', 'Костюмы', 'Платья', 'Аксессуары', 'Брюки', 'Джинсы'];
 
 type Product = {
     id: string;

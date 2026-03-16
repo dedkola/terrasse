@@ -3,7 +3,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
-const CATEGORIES = ['Топы', 'Трикотаж', 'Верхняя одежда'];
+const CATEGORIES = ['Топы', 'Трикотаж', 'Верхняя одежда', 'Костюмы', 'Платья', 'Аксессуары', 'Брюки', 'Джинсы'];
 
 export default function AddProductPage() {
     const router = useRouter();
